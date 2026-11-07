@@ -8,35 +8,9 @@ Every design principle, failover threshold, and data plane transition was verifi
 
 ## Lab Architecture & Multi-Site Fabric
 
-![Topology](screenshots/topology.png)
+![Topology](screenshots/read-me-diagram.png)
 
-```
-                    ┌───────────────────────── [ Dual Underlay Backbone ] ─────────────────────────┐
-                    │                                                                              │
-                    │   ┌────────────────── [ ISP-A: MPLS Core ] ──────────────────┐               │
-                    │   │ (10.0.1.1)            (10.0.1.13)    (10.0.1.5)  (10.0.1.9)              │
-                    │   ▼                       ▼              ▼           ▼                       │
-         [ port2: 10.0.1.2/30 ]      [ port2: 10.0.1.14/30 ]   [ port2 ]   [ port2 ]               │
-           [ Fortinet-HQ ]              [ Fortinet-Hub-2 ]     [ Spoke 1 ] [ Spoke 2 ]             │
-           (Primary Hub 1)              (Secondary Hub 2)      (Branch-1)  (Branch-2)              │
-         [ port3: 10.0.2.2/30 ]      [ port3: 10.0.2.14/30 ]   [ port3 ]   [ port3 ]               │
-                    ▲                       ▲              ▲           ▲                           │
-                    │   │ (10.0.2.1)            (10.0.2.13)    (10.0.2.5)  (10.0.2.9)              │
-                    │   └───────────── [ ISP-B: Broadband Core ] ──────────────────┘               │
-                    └──────────────────────────────────────────────────────────────────────────────┘
-                                                       │
-                                                       ▼
-                    ┌─────────────────────── [ Multi-Hub SD-WAN Fabric ] ──────────────────────────┐
-                    │                                                                              │
-                    │  • Dual-Hub Core:   Hub 1 (Primary, LocPrf 200) <═> Hub 2 (Standby, LocPrf 100)│
-                    │  • Inter-Hub DCI:   Dedicated Point-to-Point IPsec & iBGP Peering            │
-                    │  • 4-Tunnel Spokes: Each Branch builds persistent overlays to both Hubs      │
-                    │  • Segmentation:    Multi-VRF isolation over single overlay (MP-BGP VPNv4)   │
-                    │  • Direct Breakout: Split-tunnel DIA with SNAT for trusted SaaS/FQDN targets │
-                    │  • Zero-Loss Audio: Proactive Packet Duplication & De-Duplication buffers    │
-                    │  • Dynamic Mesh:    On-demand Spoke-to-Spoke Shortcuts (ADVPN + NHRP)        │
-                    └──────────────────────────────────────────────────────────────────────────────┘
-```
+![Topology](screenshots/topology.png)
 
 | Infrastructure Node | Interface Roles | Subnet Addressing | Network Role |
 | :--- | :--- | :--- | :--- |
