@@ -1,14 +1,42 @@
-# Module 1: Fortinet FortiGate SD-WAN & Secure Multi-Path Fabrics
+# Enterprise Fortinet FortiGate SD-WAN & Secure Multi-Path Fabrics
 
-An end-to-end, multi-site enterprise SD-WAN fabric deployed on FortiGate-VMs running FortiOS. This module progresses systematically from baseline underlay SLA steering to **intent-based SaaS steering, active/active session balancing, deterministic QoS rate shaping, multi-path IPsec overlays, composite VoIP SLA remediation, dynamic spoke-to-spoke Auto-Discovery VPN (ADVPN), proactive packet duplication, MP-BGP multi-VRF segmentation, direct internet breakout (DIA), metadata-driven BGP route-tag steering, and multi-region dual-hub disaster recovery**.
+An end-to-end, multi-site enterprise SD-WAN fabric deployed on FortiGate-VMs running FortiOS. This repository documents a complete 15-project progression from foundational underlay performance steering to **intent-based SaaS breakout, active/active flow balancing, granular QoS rate enforcement, multi-path IPsec overlays, composite VoIP SLA monitoring, dynamic spoke-to-spoke Auto-Discovery VPN (ADVPN), proactive packet duplication, MP-BGP multi-VRF segmentation, direct internet access (DIA), metadata-driven BGP route-tag steering, multi-region dual-hub disaster recovery, dynamic inbound BGP SLA path control, sub-second BFD failover, and NetDevOps automation pipelines using Python, Netmiko, and Jinja2**.
 
-Every design principle, failover threshold, and data plane transition was verified through CLI diagnostics, kernel routing tables, live packet sniffers, wire-level Wireshark captures, and real-time failure injection.
+Every design principle, failover threshold, and data plane transition was verified using CLI diagnostics, kernel routing tables, live packet sniffers, wire-level Wireshark captures, and real-time failure injection.
 
 ---
 
 ## Lab Architecture & Multi-Site Fabric
 
 ![Topology](screenshots/topology.png)
+
+```
+                    ┌───────────────────────── [ Dual Underlay Backbone ] ─────────────────────────┐
+                    │                                                                              │
+                    │   ┌────────────────── [ ISP-A: MPLS Core ] ──────────────────┐               │
+                    │   │ (10.0.1.1)            (10.0.1.13)    (10.0.1.5)  (10.0.1.9)              │
+                    │   ▼                       ▼              ▼           ▼                       │
+         [ port2: 10.0.1.2/30 ]      [ port2: 10.0.1.14/30 ]   [ port2 ]   [ port2 ]               │
+           [ Fortinet-HQ ]              [ Fortinet-Hub-2 ]     [ Spoke 1 ] [ Spoke 2 ]             │
+           (Primary Hub 1)              (Secondary Hub 2)      (Branch-1)  (Branch-2)              │
+         [ port3: 10.0.2.2/30 ]      [ port3: 10.0.2.14/30 ]   [ port3 ]   [ port3 ]               │
+                    ▲                       ▲              ▲           ▲                           │
+                    │   │ (10.0.2.1)            (10.0.2.13)    (10.0.2.5)  (10.0.2.9)              │
+                    │   └───────────── [ ISP-B: Broadband Core ] ──────────────────┘               │
+                    └──────────────────────────────────────────────────────────────────────────────┘
+                                                       │
+                                                       ▼
+                    ┌─────────────────────── [ Multi-Hub SD-WAN Fabric ] ──────────────────────────┐
+                    │                                                                              │
+                    │  • Dual-Hub Core:   Hub 1 (Primary, LocPrf 200) <═> Hub 2 (Standby, LocPrf 100)│
+                    │  • Inter-Hub DCI:   Dedicated Point-to-Point IPsec & iBGP Peering            │
+                    │  • 4-Tunnel Spokes: Each Branch builds persistent overlays to both Hubs      │
+                    │  • Segmentation:    Multi-VRF isolation over single overlay (MP-BGP VPNv4)   │
+                    │  • Direct Breakout: Split-tunnel DIA with SNAT for trusted SaaS/FQDN targets │
+                    │  • Zero-Loss Audio: Proactive Packet Duplication & De-Duplication buffers    │
+                    │  • Dynamic Mesh:    On-demand Spoke-to-Spoke Shortcuts (ADVPN + NHRP)        │
+                    └──────────────────────────────────────────────────────────────────────────────┘
+```
 
 | Infrastructure Node | Interface Roles | Subnet Addressing | Network Role |
 | :--- | :--- | :--- | :--- |
@@ -22,7 +50,7 @@ Every design principle, failover threshold, and data plane transition was verifi
 
 ---
 
-## 12-Project Implementation Matrix
+## 15-Project Master Implementation Matrix
 
 | # | Project Module | Engineering Capability Tested | Key Verification Artifacts | Folder |
 | :-: | :--- | :--- | :--- | :--- |
@@ -33,11 +61,14 @@ Every design principle, failover threshold, and data plane transition was verifi
 | **5** | **IPsec Overlay on SD-WAN Zone** | Bound dual IPsec tunnels to a **VPN** zone; maintained active SAs across link cut with floating blackhole safety. | wireshark-icmp-esp.png<br>sd-wan-esp-pcap.mp4 | [05-ipsec-overlay-sdwan/](05-ipsec-overlay-sdwan/) |
 | **6** | **VoIP Composite SLA Monitoring** | Injected live latency (70 ms), jitter (25 ms), and loss (3%) via `tc netem`; failovers triggered at **exact ICMP sequence borders**. | jitter-test-port-2-seq-32.png<br>sd-wan-latency-test.mp4 | [06-composite-voip-sla/](06-composite-voip-sla/) |
 | **7** | **ADVPN & Dynamic Shortcuts** | Deployed Hub BGP Route Reflection (AS 65000); **dynamically spawned spoke-to-spoke tunnels**, bypassing the Hub. | dynamic-tunnel-branch-2.png<br>tunnel counter: 964 ➔ 984 | [07-advpn-dynamic-shortcuts/](07-advpn-dynamic-shortcuts/) |
-| **8** | **Packet Duplication & De-Duplication** | Cloned voice/video frames simultaneously over MPLS and Broadband; proved **0% packet loss** under active 15–33% link degradation. | diagnose-sniffer-de-duplication.png<br>mpls-test-0-percent-loss.png | [08-packet-duplication-fec/](08-packet-duplication-fec/) |
+| **8** | **Packet Duplication & De-Duplication** | Cloned voice/video frames simultaneously over MPLS and Broadband; proved **0% packet loss** under active 15–33% link degradation. | diagnose-sniffer-de-duplication.png<br>mpls-test-0-percent-loss.png | [08-packet-duplication-zero-loss/](08-packet-duplication-zero-loss/) |
 | **9** | **Multi-VRF Segmentation (MP-BGP)** | Multiplexed Corporate (VRF 10) and Guest (VRF 20) over a single overlay with `vpn-id-ipip`; proved **100% cross-VRF isolation**. | get-router-info-bgp-vpnv4.png<br>cross-vrf-ping-100-drop.png | [09-multi-vrf-segmentation/](09-multi-vrf-segmentation/) |
-| **10** | **Direct Internet Access (DIA) vs. Backhaul** | Split-tunnel steering: trusted SaaS/FQDN broke out locally via Broadband (`port3`) with SNAT, while internal traffic backhauled to HQ. | traceroute-1.1.1.1-fios.png<br>firefox-networkingnotebook.png | [10-dia-isdb-fqdn-steering/](10-dia-isdb-fqdn-steering/) |
+| **10** | **Direct Internet Access (DIA) vs. Backhaul** | Split-tunnel steering: trusted SaaS/FQDN broke out locally via Broadband (`port3`) with SNAT, while internal traffic backhauled to HQ. | traceroute-1.1.1.1-fios.png<br>firefox-networkingnotebook.png | [10-dia-saas-fqdn-steering/](10-dia-saas-fqdn-steering/) |
 | **11** | **BGP Community Route-Tag Steering** | Translated BGP Community 65000:100 into kernel Route-Tag 100; steered traffic dynamically with **zero destination IPs configured**. | diagnose-proute-list-tag100.png<br>testing-policy-traceroute.png | [11-bgp-community-route-tag/](11-bgp-community-route-tag/) |
 | **12** | **Multi-Hub Dual-Region ADVPN (DR)** | Deployed 4-tunnel spoke architecture to dual independent Hubs; proved **uninterrupted shortcut traffic** through complete primary Hub failure. | hub-ha-test-bgp-failover.png<br>shortcut-survives-hub-failure.png | [12-dual-hub-advpn-ha/](12-dual-hub-advpn-ha/) |
+| **13** | **Dynamic Inbound BGP SLA Control** | Tied SD-WAN SLA health to BGP `route-map-out-preferable`; dynamically demoted degraded MPLS (MED 500), forcing HQ return traffic onto Broadband. | hq-bgp-network-metric-500-demoted.png<br>hq-traceroute-inbound-shifted-to-bb.png | [13-inbound-bgp-sla-control/](13-inbound-bgp-sla-control/) |
+| **14** | **Sub-Second BFD Convergence** | Deployed 250 ms BFD micro-timers over overlay tunnels; proved **>95% convergence reduction (6.93s vs. 2m 17s)** with 0% data loss. | bfd-timer-6-seconds.mp4<br>no-bfd-timer.mp4 | [14-bfd-subsecond-convergence/](14-bfd-subsecond-convergence/) |
+| **15** | **NetDevOps SD-WAN Automation** | Built an automated 3-stage NetDevOps pipeline using Python 3, Netmiko, and Jinja2; programmatically validated telemetry and provisioned SIP QoS rules. | deploy_sdwan.py<br>sd-wan-automation-demo.mp4 | [15-netdevops-sdwan-automation/](15-netdevops-sdwan-automation/) |
 
 ---
 
@@ -113,6 +144,24 @@ Every design principle, failover threshold, and data plane transition was verifi
 * **Architecture:** Deployed a 4-tunnel spoke architecture. Spokes maintain concurrent tunnels to Primary Hub 1 (HQ) and Secondary Hub 2 (DC-2). BGP Route Reflection advertises routes with Local-Preference 200 on Hub 1 and Local-Preference 100 on Hub 2. Both Hubs interconnect via a private DCI IPsec tunnel.
 * **Disaster Recovery Proof:** Administratively shut down both physical WAN circuits on Hub 1. Spoke BGP sessions to Hub 1 dropped to Active, while Hub 2 peering remained established, automatically promoting backup routes. Existing spoke-to-spoke shortcut traffic maintained **continuous communication with 0% loss** throughout the primary datacenter blackout.
 
+### 13. Dynamic Inbound Path Control via BGP Driven by SD-WAN SLA Status
+* **Objective:** Solve the classic WAN asymmetry challenge by forcing upstream hubs to dynamically steer return traffic away from degraded branch access links.
+* **Architecture:** Branch-1 ties overlay SLA health directly to BGP using `route-map-out-preferable`. When healthy, Branch-1 advertises `10.20.20.0/24` with Metric (MED) 100 on MPLS and Metric 200 on Broadband.
+* **Inbound Steering Proof:** Injected 15% packet loss on MPLS via `tc netem`. Branch-1 detected the SLA breach and fell back to advertising Metric 500 on MPLS. Without touching Fortinet-HQ, HQ’s BGP engine immediately demoted MPLS (500) and promoted Broadband (200), shifting inbound return traceroutes and sniffers to `BB-VPN` (10.255.2.2).
+
+### 14. Sub-Second BGP Convergence via BFD over SD-WAN Overlays
+* **Objective:** Eliminate the 3-minute hold-down delay of standard BGP during silent circuit brownouts.
+* **Architecture:** Deployed BFD on both Fortinet-HQ and Fortinet-Branch-1 with 250 ms Tx/Rx micro-timers and a detect multiplier of 3 (750 ms failure detection threshold) over `MPLS-VPN` and `BB-VPN`.
+* **Empirical Benchmark:** Synchronized stopwatch testing proved that under a 100% link drop, standard BGP required **2 minutes 17.79 seconds** to declare the neighbor dead. With BFD active, the session tore down and reconverged in **6.93 seconds total test cycle**, sustaining high-frequency ping streams with **0% packet loss (138 of 138 packets received)**.
+
+### 15. NetDevOps: Automated SD-WAN Provisioning via Python, Netmiko & Jinja2
+* **Objective:** Eliminate manual CLI configuration drift across multi-branch deployments using Infrastructure as Code (IaC).
+* **Architecture:** Built an end-to-end Python automation script (`deploy_sdwan.py`) utilizing Netmiko and Jinja2 templating (`sd-wan-variable-template.j2`) backed by a secure `.env` credential vault.
+* **Automated Pipeline Lifecycle:**
+  1. **Pre-Check:** Connects to Fortinet-Branch-1 via SSH and programmatically parses `diagnose sys sdwan health-check` to verify overlay health before making changes.
+  2. **Render & Push:** Dynamically injects SIP voice parameters (UDP port 5060, SLA target, priority members 3 and 4) into the Jinja2 template and pushes the configuration transactionally.
+  3. **Post-Check Validation:** Polls `diagnose sys sdwan service 10`, programmatically asserts that Rule 10 is active, matches UDP 5060, and shows Member 3 selected in the kernel forwarding table.
+
 ---
 
 ## Centralized PCAP Repository (Google Drive)
@@ -126,12 +175,22 @@ All raw packet captures documenting live protocol handshakes, cryptographic head
 | **05-ipsec-overlay-sdwan** | `sd-wan-vpn.pcap` showing IKEv2 Phase 1/2 negotiations and ESP-encapsulated ICMP payloads. | [Download IPsec Overlay PCAPs](https://drive.google.com/drive/folders/1XPGdyjsjweUtwI_gpUvKmUhVn-59oIsY?usp=sharing) |
 | **06-composite-voip-sla** | 8 individual PCAPs capturing sequence hand-offs for latency, jitter, loss, and triple-metric tests. | [Download VoIP SLA PCAPs](https://drive.google.com/drive/folders/1zbTsQM5IDVV_s9MAefLFgP0ITRIJjlnt?usp=sharing) |
 | **07-advpn-dynamic-shortcuts** | Dynamic spoke-to-spoke tunnel creation, NHRP control messages, and direct ESP communication traces. | [Download ADVPN Shortcut PCAPs](https://drive.google.com/drive/folders/1H6k7S5ta2FrdIq20pBEoN_4-FmHGTUGh?usp=sharing) |
-| **10-dia-isdb-fqdn-steering** | Raw traces on port2 and port3 proving positive DIA egress and negative leakage onto MPLS. | [Download DIA Split-Tunnel PCAPs](https://drive.google.com/drive/folders/1IWMa5K0qDe2g_2mTt2T9U_M2Lbc2ZYO8?usp=sharing) |
+| **10-dia-saas-fqdn-steering** | Raw traces on port2 and port3 proving positive DIA egress and negative leakage onto MPLS. | [Download DIA Split-Tunnel PCAPs](https://drive.google.com/drive/folders/1IWMa5K0qDe2g_2mTt2T9U_M2Lbc2ZYO8?usp=sharing) |
 
 ---
 
-[Back to Multi-Vendor SD-WAN Lab Overview](../../README.md) · [Next Module: Cisco Catalyst SD-WAN (Viptela)](../../02-Cisco-Catalyst-SDWAN/)
-=======
-# fortinet-sd-wan
-Enterprise Fortinet SD-WAN fabric on FortiOS. Validates intent-based routing, QoS, ADVPN mesh, MP-BGP VPNv4, BGP inbound SLA steering via MED, sub-second BFD, DIA split-tunneling, and automated Netmiko/Jinja2 provisioning with live Wireshark PCAPs.
->>>>>>> origin/main
+## Engineering Troubleshooting & Lessons Learned
+
+| Challenge Encountered | Root Cause | Engineering Resolution |
+| :--- | :--- | :--- |
+| **Traffic remained pinned to a single link after enabling load balancing.** | FortiOS is stateful; existing flows retain their egress routing tag in the kernel session table. | Issued `diagnose sys session clear` to flush active sessions and force re-evaluation against the updated hash rule. |
+| **Single-stream iPerf3 tests failed to utilize both links simultaneously.** | SD-WAN hashing functions on 5-tuples to prevent out-of-order packet delivery and TCP retransmissions. | Deployed secondary IP endpoints on both sides of the fabric to create distinct 5-tuples, or set hash-mode round-robin. |
+| **Hub dropped reflected BGP routes over the secondary underlay.** | Default iBGP prevents advertising a route learned from one iBGP peer to another, and BGP selects only one best path. | Enabled route-reflector-client, ibgp-multipath, and additional-path both on the Route Reflector neighbor groups. |
+| **Health checks falsely reported links down during general Internet outages.** | Probing public anycast IPs (e.g., 8.8.8.8) tests Internet health rather than individual underlay provider circuits. | Pointed health-check probes directly at the immediate provider next-hop gateway IPs (10.0.1.1 and 10.0.2.1). |
+| **ADVPN shortcut failed to establish between spokes.** | Firewall policies on the Hub dropped transit spoke-to-spoke traffic before the initial shortcut was triggered. | Implemented bidirectional Hub transit policies (srcintf ADVPN-MPLS ➔ dstintf ADVPN-MPLS) with action accept. |
+| **Cross-underlay shortcut negotiations timed out.** | Spokes had asymmetrical SD-WAN rule priorities, attempting to build a shortcut between a Broadband IP and an MPLS IP across disjoint providers. | Aligned SD-WAN rule priorities across all spokes and configured `network-id` separation on Phase 1 interfaces. |
+| **Dialup dynamic tunnels could not be added as SD-WAN members on the Hub.** | Hub Phase 1 tunnels use `type dynamic` with `net-device disable`, functioning as listening server templates rather than static point-to-point interfaces. | Maintained dynamic dialup templates on the Hub; applied SD-WAN member selection rules exclusively on Spoke initiators. |
+| **Hub continued saturating degraded branch links with return traffic.** | Standard SD-WAN only steers outbound packets; upstream routers continue routing return flows over the degraded path unless signaled. | Bound SD-WAN SLA health to BGP `route-map-out-preferable`, dynamically advertising MED 500 to demote degraded links upstream. |
+| **Slow BGP hold timers caused up to 2-minute blackouts during silent brownouts.** | BGP keepalives (60s) and hold timers (180s) take several minutes to declare an unacknowledged TCP session dead. | Enabled BFD with 250 ms micro-timers and detect multiplier 3 on overlay interfaces, reducing failure detection down to 750 ms. |
+
+---
