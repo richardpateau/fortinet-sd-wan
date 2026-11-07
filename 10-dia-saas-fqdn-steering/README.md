@@ -12,11 +12,11 @@ This project implements **Direct Internet Access (DIA) with Granular Application
 
 **Live Execution: DIA Breakout CLI Test**
 
-https://github.com/user-attachments/assets/a7833b78-a377-4b01-86fd-4d62a1431bbc
+https://github.com/user-attachments/assets/8cc7b1ed-9fcf-4438-919f-8db1095cd6d7
 
 **Live Execution: DIA Breakout GUI Test**
 
-https://github.com/user-attachments/assets/9f5ce18c-8dbf-4c62-8d88-b10ad80fea11
+https://github.com/user-attachments/assets/c2f5ed0d-aba2-438c-aea1-75b89aad3e91
 
 ---
 
