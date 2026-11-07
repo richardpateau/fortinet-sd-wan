@@ -131,3 +131,7 @@ All raw packet captures documenting live protocol handshakes, cryptographic head
 ---
 
 [Back to Multi-Vendor SD-WAN Lab Overview](../../README.md) · [Next Module: Cisco Catalyst SD-WAN (Viptela)](../../02-Cisco-Catalyst-SDWAN/)
+=======
+# fortinet-sd-wan
+Enterprise Fortinet SD-WAN fabric on FortiOS. Validates intent-based routing, QoS, ADVPN mesh, MP-BGP VPNv4, BGP inbound SLA steering via MED, sub-second BFD, DIA split-tunneling, and automated Netmiko/Jinja2 provisioning with live Wireshark PCAPs.
+>>>>>>> origin/main
