@@ -1,0 +1,18 @@
+config system sdwan
+    config service
+        edit 10
+            set name {{ name }}
+            set mode sla
+            set protocol {{ protocol_number }}
+            set start-port {{ start_port }}
+            set end-port {{ end_port }}
+            set dst {{ dest_address}}
+            config sla
+                edit "{{ sla }}"
+                    set id {{ sla_number }}
+                next
+            end
+            set priority-members {{ members }}
+        next
+    end
+end

@@ -1,0 +1,74 @@
+BRANCH 
+
+config system interface
+    edit "MPLS-VPN"
+        set bfd enable
+        set bfd-desired-min-tx 250
+        set bfd-required-min-rx 250
+        set bfd-detect-mult 3
+    next
+    edit "BB-VPN"
+        set bfd enable
+        set bfd-desired-min-tx 250
+        set bfd-required-min-rx 250
+        set bfd-detect-mult 3
+    next
+end
+
+config router bgp
+    config neighbor
+        edit "10.255.1.254"
+            set bfd enable
+        next
+        edit "10.255.2.254"
+            set bfd enable
+        next
+end
+
+-----------------
+
+HQ
+
+config system interface
+    edit "MPLS-VPN"
+        set bfd enable
+        set bfd-desired-min-tx 250
+        set bfd-required-min-rx 250
+        set bfd-detect-mult 3
+    next
+    edit "BB-VPN"
+        set bfd enable
+        set bfd-desired-min-tx 250
+        set bfd-required-min-rx 250
+        set bfd-detect-mult 3
+    next
+end
+
+config router bgp
+    config neighbor-group
+        edit "MPLS-SPOKES"
+            set bfd enable
+        next
+        edit "BB-SPOKES"
+            set bfd enable
+        next
+    end
+    config neighbor
+        edit "10.255.255.2"
+            set bfd enable
+        next
+    end
+end
+
+
+--------------------------
+
+config system sdwan
+    config health-check
+        edit "ADVPN_HEALTH"
+            set interval 500
+            set failtime 2
+        next
+    end
+end
+

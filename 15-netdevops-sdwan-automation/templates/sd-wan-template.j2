@@ -1,0 +1,18 @@
+config system sdwan
+    config service
+        edit 10
+            set name "VOICE-SIP-NETMIKO"
+            set mode sla
+            set protocol 17
+            set start-port 5060
+            set end-port 5060
+            set dst HQ-LAN
+            config sla
+                edit "ADVPN_HEALTH"
+                    set id 1
+                next
+            end
+            set priority-members 3 4
+        next
+    end
+end

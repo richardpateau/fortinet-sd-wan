@@ -1,0 +1,550 @@
+HUB 2
+
+config vpn ipsec phase1-interface
+    edit "H2-ADVPN-MPLS"
+        set type dynamic
+        set interface "port2"
+        set ike-version 2
+        set peertype any
+        set net-device disable
+        set proposal des-sha256
+        set add-route disable
+        set dpd on-idle
+        set auto-discovery-sender enable
+        set psksecret Pateau1!
+    next
+    edit "H2-ADVPN-BB"
+        set type dynamic
+        set interface "port3"
+        set ike-version 2
+        set peertype any
+        set net-device disable
+        set proposal des-sha256
+        set add-route disable
+        set dpd on-idle
+        set auto-discovery-sender enable
+        set psksecret Pateau1!
+    next
+end
+
+config vpn ipsec phase2-interface
+    edit H2-ADVPN-MPLS-P2
+        set phase1name H2-ADVPN-MPLS
+        set proposal des-sha256
+   	next 
+   	edit H2-ADVPN-BB-P2
+		set phase1name H2-ADVPN-BB
+		set proposal des-sha256
+	next
+end
+
+-------------------------------------------
+
+config system interface
+    edit "H2-ADVPN-MPLS"
+        set ip 10.255.3.254 255.255.255.255
+        set remote-ip 10.255.3.253 255.255.255.0
+        set allowaccess ping
+    next
+    edit "H2-ADVPN-BB"
+        set ip 10.255.4.254 255.255.255.255
+        set remote-ip 10.255.4.253 255.255.255.0
+        set allowaccess ping
+    next
+end
+
+------------------------
+
+config router route-map
+    edit "SET-STANDBY-PREF"
+        config rule
+            edit 1
+                set set-local-preference 100
+            next
+        end
+    next
+end
+
+config router bgp
+    set as 65000
+    set router-id 4.4.4.4
+    set ibgp-multipath enable
+    set additional-path enable
+    set additional-path-select 4
+
+    config neighbor-group
+        edit "H2-MPLS-SPOKES"
+            set remote-as 65000
+            set route-reflector-client enable
+            set route-map-out "SET-STANDBY-PREF"
+            set additional-path both
+            set adv-additional-path 4
+        next
+        edit "H2-BB-SPOKES"
+            set remote-as 65000
+            set route-reflector-client enable
+            set route-map-out SET-STANDBY-PREF
+            set additional-path both
+			set adv-additional-path 4
+		next
+	end
+	
+	config neighbor-range
+    edit 1
+        set prefix 10.255.3.0 255.255.255.0
+        set neighbor-group "H2-MPLS-SPOKES"
+    next
+    edit 2
+        set prefix 10.255.4.0 255.255.255.0
+        set neighbor-group "H2-BB-SPOKES"
+    next
+end
+
+config network
+    edit 1
+        set prefix 10.40.40.0 255.255.255.0
+    next
+end
+
+---------------------
+HQ 
+
+config router route-map
+    edit "SET-PRIMARY-PREF"
+        config rule
+            edit 1
+                set set-local-preference 200
+            next
+        end
+    next
+end
+
+config router bgp
+    config neighbor-group
+        edit "MPLS-SPOKES"
+            set route-map-out SET-PRIMARY-PREF
+		next
+		edit "BB-SPOKES"
+			set route-map-out "SET-PRIMARY-PREF"
+		next
+	end
+end
+
+------------------------------
+config vpn ipsec phase1-interface
+    edit "H2-MPLS"
+        set interface "port2"
+        set ike-version 2
+        set peertype any
+        set net-device disable
+        set proposal des-sha256
+        set dpd on-idle
+        set auto-discovery-receiver enable
+        set remote-gw 10.0.1.14
+        set psksecret Pateau1!
+        set add-route disable
+    next
+    edit "H2-BB"
+        set interface "port3"
+        set ike-version 2
+        set peertype any
+        set net-device disable
+        set proposal des-sha256
+        set dpd on-idle
+        set auto-discovery-receiver enable
+        set remote-gw 10.0.2.14
+        set psksecret Pateau1!
+        set add-route disable
+    next
+end
+
+config vpn ipsec phase2-interface
+    edit "H2-MPLS-P2"
+        set phase1name "H2-MPLS"
+        set proposal des-sha256
+        set auto-negotiate enable
+    next
+    edit "H2-BB-P2"
+        set phase1name "H2-BB"
+        set proposal des-sha256
+        set auto-negotiate enable
+    next
+end
+
+config system interface
+    edit "H2-MPLS"
+        set ip 10.255.3.3 255.255.255.255
+        set remote-ip 10.255.3.254 255.255.255.0
+        set allowaccess ping
+    next
+    edit "H2-BB"
+  
+        set remote-ip 10.255.4.254 255.255.255.0
+        set allowaccess ping
+    next
+end
+
+config router static
+    edit 0
+        set dst 10.0.1.14 255.255.255.255
+        set gateway 10.0.1.9
+        set device "port2"
+    next
+    edit 0
+        set dst 10.0.2.14 255.255.255.255
+        set gateway 10.0.2.9
+        set device "port3"
+    next
+end
+
+config router bgp
+    config neighbor
+        edit 10.255.3.254
+            set remote-as 65000
+            set link-down-failover enable
+            set additional-path both
+        	set adv-additional-path 4
+        	set update-source H2-MPLS
+        next
+        edit 10.255.4.254
+            set remote-as 65000
+            set link-down-failover enable
+            set additional-path both
+        	set adv-additional-path 4
+        	set update-source H2-BB
+        next
+    end
+end
+
+config system sdwan
+    config members
+        edit 5
+            set interface "H2-MPLS"
+            set zone "VPN-ZONE"
+        next
+        edit 6
+            set interface "H2-BB"
+            set zone "VPN-ZONE"
+        next
+    end
+end
+
+
+----------------------
+
+config firewall address
+    edit "HUB-2-LAN"
+        set subnet 10.40.40.0 255.255.255.0
+    next
+    edit "ALL-SPOKES-LAN"
+        set subnet 10.0.0.0 255.0.0.0
+    next
+end
+
+config firewall policy
+    edit 1
+        set name "SPOKES-TO-HUB-2"
+        set srcintf "H2-ADVPN-MPLS" "H2-ADVPN-BB"
+        set dstintf "port1"
+        set srcaddr "ALL-SPOKES-LAN"
+        set dstaddr "HUB-2-LAN"
+        set action accept
+        set schedule "always"
+        set service "ALL"
+        set logtraffic all
+    next
+    edit 2
+        set name "HUB-2-TO-SPOKES"
+        set srcintf "port1"
+        set dstintf "H2-ADVPN-MPLS" "H2-ADVPN-BB"
+        set srcaddr "HUB-2-LAN"
+        set dstaddr "ALL-SPOKES-LAN"
+        set action accept
+        set schedule "always"
+        set service "ALL"
+        set logtraffic all
+    next
+    edit 3
+        set name "ADVPN-TRANSIT-MPLS"
+        set srcintf "H2-ADVPN-MPLS"
+        set dstintf "H2-ADVPN-MPLS"
+        set srcaddr "ALL-SPOKES-LAN"
+        set dstaddr "ALL-SPOKES-LAN"
+        set action accept
+        set schedule "always"
+        set service "ALL"
+        set logtraffic all
+    next
+    edit 4
+        set name "ADVPN-TRANSIT-BB"
+        set srcintf "H2-ADVPN-BB"
+        set dstintf "H2-ADVPN-BB"
+        set srcaddr "ALL-SPOKES-LAN"
+        set dstaddr "ALL-SPOKES-LAN"
+        set action accept
+        set schedule "always"
+        set service "ALL"
+        set logtraffic all
+    next
+    edit 5
+        set name "ADVPN-TRANSIT-CROSS-UNDERLAY"
+        set srcintf "H2-ADVPN-MPLS" "H2-ADVPN-BB"
+        set dstintf "H2-ADVPN-MPLS" "H2-ADVPN-BB"
+        set srcaddr "ALL-SPOKES-LAN"
+        set dstaddr "ALL-SPOKES-LAN"
+        set action accept
+        set schedule "always"
+        set service "ALL"
+        set logtraffic all
+    next
+    edit 6 
+    	set name WAN_TO_LAN
+    	set srcintf any
+        set dstintf port1
+        set srcaddr all
+        set dstaddr HUB-2-LAN
+        set action accept
+        set schedule "always"
+        set service "ALL"
+        set logtraffic all
+	next
+	edit 7
+    	set name LAN_TO_WAN
+    	set srcintf port1
+        set dstintf any
+        set srcaddr HUB-2-LAN
+        set dstaddr all
+        set action accept
+        set schedule "always"
+        set service "ALL"
+        set logtraffic all
+     edit 0
+        set name H2-ADVPN-MPLS-TO-BB
+        set srcintf H2-ADVPN-MPLS
+        set dstintf H2-ADVPN-BB
+        set action accept
+        set srcaddr "all"
+        set dstaddr "all"
+        set schedule "always"
+        set service "ALL"
+        set logtraffic all
+    next 
+    edit 0
+        set name "H2-ADVPN-BB-TO-MPLS"
+        set srcintf H2-ADVPN-BB
+        set dstintf H2-ADVPN-MPLS
+        set action accept
+        set srcaddr "all"
+        set dstaddr "all"
+        set schedule "always"
+        set service "ALL"
+        set logtraffic all
+    next
+
+
+------------------
+config router static
+    edit 1
+        set dst 10.0.1.6 255.255.255.255
+        set gateway 10.0.1.13
+        set device "port2"
+    next
+    edit 2
+        set dst 10.0.1.10 255.255.255.255
+        set gateway 10.0.1.13
+        set device "port2"
+    next
+    edit 3
+        set dst 10.0.2.6 255.255.255.255
+        set gateway 10.0.2.13
+        set device "port3"
+    next
+    edit 4
+        set dst 10.0.2.10 255.255.255.255
+        set gateway 10.0.2.13
+        set device "port3"
+    next
+    edit 5
+        set gateway 10.0.1.13
+        set device "port2"
+    next
+    edit 6
+        set gateway 10.0.2.13
+        set device "port3"
+    next
+end
+
+
+---------------------------------
+
+config vpn ipsec phase1-interface
+    edit "HUB1-TO-HUB2"
+        set interface "port2"
+        set ike-version 2
+        set proposal des-sha256
+        set remote-gw 10.0.1.14
+        set psksecret Pateau1!
+        set auto-negotiate enable
+        set dpd on-idle
+    next
+end
+
+config vpn ipsec phase2-interface
+    edit "HUB1-TO-HUB2-P2"
+        set phase1name "HUB1-TO-HUB2"
+        set proposal des-sha256
+        set auto-negotiate enable
+    next
+end
+
+config system interface
+    edit "HUB1-TO-HUB2"
+        set ip 10.255.255.1 255.255.255.255
+        set remote-ip 10.255.255.2 255.255.255.252
+        set allowaccess ping
+    next
+end
+
+config router static
+    edit 0
+        set dst 10.0.1.14 255.255.255.255
+        set gateway 10.0.1.1
+        set device "port2"
+    next
+end
+
+config firewall policy
+    edit 0
+        set name any
+        set srcintf any
+        set dstintf any
+        set srcaddr "all"
+        set dstaddr "all"
+        set action accept
+        set schedule "always"
+        set service "ALL"
+        set logtraffic all
+    next
+    edit 0
+        set name "HUB2-TO-HUB1-LAN"
+        set srcintf "HUB1-TO-HUB2"
+        set dstintf "port1"
+        set srcaddr "all"
+        set dstaddr "all"
+        set action accept
+        set schedule "always"
+        set service "ALL"
+        set logtraffic all
+    next
+end
+
+
+-------------------------------------------
+
+config vpn ipsec phase1-interface
+    edit "HUB2-TO-HUB1"
+        set interface "port2"
+        set ike-version 2
+        set proposal des-sha256
+        set remote-gw 10.0.1.2
+        set psksecret Pateau1!
+        set auto-negotiate enable
+        set dpd on-idle
+    next
+end
+
+config vpn ipsec phase2-interface
+    edit "HUB2-TO-HUB1-P2"
+        set phase1name "HUB2-TO-HUB1"
+        set proposal des-sha256
+        set auto-negotiate enable
+    next
+end
+
+config system interface
+    edit "HUB2-TO-HUB1"
+        set ip 10.255.255.2 255.255.255.255
+        set remote-ip 10.255.255.1 255.255.255.252
+        set allowaccess ping
+    next
+end
+
+config router static
+    edit 0
+        set dst 10.0.1.2 255.255.255.255
+        set gateway 10.0.1.13
+        set device "port2"
+    next
+end
+
+config firewall policy
+    edit 0
+        set name "HUB2-TO-HUB1-LAN"
+        set srcintf "port1"
+        set dstintf "HUB2-TO-HUB1"
+        set srcaddr "all"
+        set dstaddr "all"
+        set action accept
+        set schedule "always"
+        set service "ALL"
+        set logtraffic all
+    next
+    edit 0
+        set name "HUB1-TO-HUB2-LAN"
+        set srcintf "HUB2-TO-HUB1"
+        set dstintf "port1"
+        set srcaddr "all"
+        set dstaddr "all"
+        set action accept
+        set schedule "always"
+        set service "ALL"
+        set logtraffic all
+    next
+end
+
+-----------------------------
+
+config router bgp
+    config neighbor
+        edit 10.255.255.2
+            set remote-as 65000
+            set link-down-failover enable
+            set update-source "HUB1-TO-HUB2"
+        next
+    end
+end
+
+------------------
+
+config router bgp
+    config neighbor
+        edit 10.255.255.1
+            set remote-as 65000
+            set link-down-failover enable
+            set update-source "HUB2-TO-HUB1"
+        next
+    end
+end
+
+-----------
+config router bgp
+    set recursive-next-hop enable
+end
+
+------------
+
+config vpn ipsec phase1-interface
+    edit "MPLS-VPN"
+        set network-overlay enable
+        set network-id 1
+    next
+    edit "BB-VPN"
+        set network-overlay enable
+        set network-id 2
+    next
+end
+
+
+-------------------
+
+next-hop-self disable

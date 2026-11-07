@@ -1,0 +1,196 @@
+HQ 
+
+config vpn ipsec phase1-interface
+    edit MPLS-VPN
+        set encapsulation vpn-id-ipip
+    next
+    edit BB-VPN
+        set encapsulation vpn-id-ipip
+    next
+end
+
+--------------------------
+
+BRANCH 1
+
+config vpn ipsec phase1-interface
+    edit MPLS-VPN
+        set encapsulation vpn-id-ipip
+    next
+    edit BB-VPN
+        set encapsulation vpn-id-ipip
+    next
+end
+
+--------------------
+
+HQ 
+
+config system interface
+    edit port1
+        set vrf 10
+        set ip 10.10.10.1 255.255.255.0
+        set allowaccess ping
+        set vlanid 10
+    next
+    edit port1.20
+        set vdom root
+        set vrf 20
+        set ip 10.10.20.1 255.255.255.0
+        set allowaccess ping
+        set interface port1
+        set vlanid 20
+    next
+end
+
+-------------------
+
+BRANCH 1
+
+config system interface
+    edit port1
+        set vrf 10
+        set ip 10.20.20.1 255.255.255.0
+        set allowaccess ping
+        set vlanid10
+    next
+    edit port1.20
+        set vdom root
+        set vrf 20
+        set ip 10.20.30.1 255.255.255.0
+        set allowaccess ping
+        set interface "port1"
+        set vlanid 20
+    next
+end
+
+----------------------
+
+
+HQ 
+
+config router bgp
+    config vrf
+        edit 10
+            set role ce
+            set rd "65000:10"
+            set export-rt "65000:10"
+            set import-rt "65000:10"
+        next
+        edit 20
+            set role ce
+            set rd "65000:20"
+            set export-rt "65000:20"
+            set import-rt "65000:20"
+        next
+    end
+end
+
+
+------------------------
+
+config router bgp
+    config vrf
+        edit "10"
+            set role ce
+            set rd "65000:11"
+            set export-rt "65000:10"
+            set import-rt "65000:10"
+        next
+        edit "20"
+            set role ce
+            set rd "65000:21"
+            set export-rt "65000:20"
+            set import-rt "65000:20"
+        next
+    end
+end
+
+------------------------
+
+
+config firewall policy
+    edit 20
+        set name "Corp-VRF10-In"
+        set srcintf "VPN-ZONE"
+        set dstintf "port1"
+        set srcaddr "all"
+        set dstaddr "all"
+        set action accept
+        set schedule "always"
+        set service "ALL"
+    next
+    edit 21
+        set name "Corp-VRF10-Out"
+        set srcintf "port1"
+        set dstintf "VPN-ZONE"
+        set srcaddr "all"
+        set dstaddr "all"
+        set action accept
+        set schedule "always"
+        set service "ALL"
+    next
+    edit 22
+        set name "Guest-VRF20-In"
+        set srcintf "VPN-ZONE"
+        set dstintf "port1.20"
+        set srcaddr "all"
+        set dstaddr "all"
+        set action accept
+        set schedule "always"
+        set service "ALL"
+    next
+    edit 23
+        set name "Guest-VRF20-Out"
+        set srcintf "port1.20"
+        set dstintf "VPN-ZONE"
+        set srcaddr "all"
+        set dstaddr "all"
+        set action accept
+        set schedule "always"
+        set service "ALL"
+    next
+end
+
+-----------------------------
+
+HQ 
+
+config router bgp
+    config network
+        edit 1
+            set prefix 10.10.10.0 255.255.255.0
+        next
+        edit 2
+            set prefix 10.10.20.0 255.255.255.0
+        next
+    end
+end
+
+
+----------------------
+
+config router bgp
+    config vrf
+        edit "0"
+            set role pe
+        next
+    end
+end
+
+---------------------
+HQ 
+
+config router bgp
+    config neighbor-group
+        edit MPLS-SPOKES
+            set route-reflector-client-vpnv4 enable
+            set soft-reconfiguration-vpnv4 enable
+        next
+        edit BB-SPOKES
+            set route-reflector-client-vpnv4 enable
+            set soft-reconfiguration-vpnv4 enable
+        next
+    end
+end
+
