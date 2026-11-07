@@ -266,5 +266,13 @@ For independent verification in Wireshark, the raw packet capture traces generat
 
 ---
 
-### Next Module
-* **[Task 4: SD-WAN Traffic Shaping & QoS Enforcement](../04-qos-traffic-shaping/)** — Implementing rate limiting, per-IP traffic shaping, and traffic priority queuing to protect critical applications from bandwidth starvation.
+### What's Next?
+
+With active/active load balancing maximizing our aggregate WAN throughput, the next step is to ensure that critical applications are protected from bandwidth starvation caused by "noisy neighbor" bulk data transfers.
+
+Continue to the next project to explore granular traffic engineering:
+- **[Project 4: SD-WAN Traffic Shaping & QoS Enforcement](../04-qos-traffic-shaping/)** – Decoupling path selection from bandwidth enforcement to clamp bulk transfers and guarantee priority queuing for latency-sensitive traffic.
+
+---
+
+[⬅️ Back to Fortinet SD-WAN Overview](../README.md)

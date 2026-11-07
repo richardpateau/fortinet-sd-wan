@@ -168,3 +168,14 @@ All raw packet captures documenting live protocol handshakes, cryptographic head
 | **Slow BGP hold timers caused up to 2-minute blackouts during silent brownouts.** | BGP keepalives (60s) and hold timers (180s) take several minutes to declare an unacknowledged TCP session dead. | Enabled BFD with 250 ms micro-timers and detect multiplier 3 on overlay interfaces, reducing failure detection down to 750 ms. |
 
 ---
+
+### What's Next?
+
+With foundational underlay health monitoring and link-state failover fully validated, the next step is to evolve from simple IP-based routing to **Application-Aware Routing**.
+
+Continue to the next project to explore dynamic, intent-based traffic steering:
+- **[Project 2: Application-Aware Routing & Dynamic SaaS Steering (FQDN)](../02-application-aware-routing/)** – Utilizing FQDN address objects and DNS proxy integration to dynamically steer critical SaaS traffic over optimal WAN paths based on domain names rather than static, ever-changing IPs.
+
+---
+
+[⬅️ Back to Fortinet SD-WAN Masterclass Overview](../README.md)

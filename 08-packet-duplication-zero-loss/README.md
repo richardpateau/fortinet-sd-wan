@@ -276,4 +276,13 @@ The Linux degradation device was moved inline to the Broadband path, injecting 1
 
 ---
 
-[Back to Fortinet Module Overview](../README.md) · [Next Module: Cisco Catalyst SD-WAN (Viptela)](../../02-Cisco-Catalyst-SDWAN/)
+### What's Next?
+
+With proactive packet duplication guaranteeing zero-loss for mission-critical real-time applications, the next step is to scale this architecture to support multiple, strictly isolated tenant networks over a single shared overlay.
+
+Continue to the next project to explore advanced segmentation:
+- **[Project 9: Multi-VRF End-to-End Segmentation over a Single SD-WAN Overlay](../09-multi-vrf-segmentation/)** – Multiplexing Corporate and Guest/IoT traffic across a single IPsec fabric using MP-BGP VPNv4, Route Distinguishers, and `vpn-id-ipip` encapsulation.
+
+---
+
+[⬅️ Back to Fortinet SD-WAN Overview](../README.md)

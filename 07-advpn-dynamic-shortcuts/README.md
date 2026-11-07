@@ -700,5 +700,13 @@ For deep-packet inspection in Wireshark, the raw capture files documenting the e
 
 ---
 
-### Next Module
-* **[Module 2: Cisco Catalyst SD-WAN (Viptela)](../../02-Cisco-Catalyst-SDWAN/)** — Transitioning to Cisco's controller-based SD-WAN architecture: orchestrating vManage, vSmart, and vBond controllers, configuring the Overlay Management Protocol (OMP), and designing centralized data/app policies.
+### What's Next?
+
+With dynamic, self-healing ADVPN shortcuts fully validated, the next step is to push the boundaries of WAN resilience by guaranteeing zero packet loss for mission-critical voice and video streams, even during active underlay degradation.
+
+Continue to the next project to explore proactive traffic engineering:
+- **[Project 8: SD-WAN Packet Duplication & De-Duplication for Zero-Loss](../08-packet-duplication-zero-loss/)** – Cloning real-time traffic across multiple overlays simultaneously and de-duplicating at the receiver to achieve 0% packet loss under severe network impairment.
+
+---
+
+[⬅️ Back to Fortinet SD-WAN Overview](../README.md)

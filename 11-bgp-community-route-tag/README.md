@@ -328,4 +328,13 @@ filters=[host 10.10.10.10]
 
 ---
 
-[Back to Fortinet Module Overview](../README.md) · [Next Module: Cisco Catalyst SD-WAN (Viptela)](../../02-Cisco-Catalyst-SDWAN/)
+### What's Next?
+
+With metadata-driven, zero-touch routing fully validated, the next step is to scale our ADVPN architecture to support enterprise-grade disaster recovery by introducing a secondary, fully redundant Hub.
+
+Continue to the next project to explore high-availability overlay fabrics:
+-  **[Project 12: Multi-Hub Dual-Region ADVPN (Disaster Recovery)](../12-dual-hub-advpn-ha/)** – Deploying a 4-tunnel spoke architecture to dual independent Hubs, proving uninterrupted shortcut traffic and seamless BGP failover during a complete primary datacenter blackout.
+
+---
+
+[⬅️ Back to Fortinet SD-WAN Overview](../README.md)

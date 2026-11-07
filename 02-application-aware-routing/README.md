@@ -1,4 +1,4 @@
-# Task 2: Application-Aware Routing & Dynamic SaaS Steering (FQDN)
+# Application-Aware Routing & Dynamic SaaS Steering (FQDN)
 
 ## Executive Summary
 Modern enterprise SaaS applications (e.g., Microsoft 365, Salesforce, AWS workspaces) rely on dynamic public IP pools and Content Delivery Networks (CDNs), making static IP whitelisting impractical and high maintenance. 
@@ -6,8 +6,6 @@ Modern enterprise SaaS applications (e.g., Microsoft 365, Salesforce, AWS worksp
 This module implements **Application-Aware Routing** on Fortinet FortiOS SD-WAN using **FQDN (Fully Qualified Domain Name) Address Objects** combined with **SD-WAN Service Rules**. The FortiGate continuously resolves and caches the IP addresses associated with critical business domains and dynamically programs kernel policy routes (proute) to steer latency-sensitive SaaS traffic over the dedicated MPLS link (ISP-A/port2). 
 
 The implementation was subsequently validated by intentionally modifying the rule priority to dynamically reroute traffic across the secondary Broadband circuit (ISP-B/port3), confirming deterministic steering and agile traffic engineering.
-
-**Live Execution: Please enlarger for clearer video**
 
 ---
 
@@ -257,5 +255,13 @@ end
 
 ---
 
-### Next Module
-* **[Task 3: Active/Active Load Balancing (Round-Robin)](../03-active-active-load-balancing/)** — Distributing outbound sessions across both WAN links simultaneously to maximize aggregate bandwidth utilization.
+### What's Next?
+
+With application-aware FQDN steering fully validated, the next step is to maximize WAN utilization by distributing traffic across *both* links simultaneously, rather than leaving the secondary circuit idle.
+
+Continue to the next project to explore concurrent session distribution:
+- **[Project 3: Active/Active Load Balancing & Multi-Session Distribution](../03-active-active-load-balancing/)** – Overcoming flow-based hashing limitations to achieve true dual-link saturation using Source-Destination IP hashing and Round-Robin session alternation.
+
+---
+
+[⬅️ Back to Fortinet SD-WAN Overview](../README.md)

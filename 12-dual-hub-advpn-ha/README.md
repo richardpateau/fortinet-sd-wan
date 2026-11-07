@@ -779,4 +779,15 @@ traceroute to 10.30.30.10 (10.30.30.10), 30 hops max, 46 byte packets
 
 ---
 
-[Back to Fortinet Module Overview](../README.md) · [Next Module: Cisco Catalyst SD-WAN (Viptela)](../../02-Cisco-Catalyst-SDWAN/)
+---
+
+### ➡️ What's Next?
+
+With dual-hub disaster recovery and autonomous control-plane failover fully validated, the next step is to solve the classic WAN asymmetry challenge by dynamically influencing *inbound* return traffic based on real-time branch link health.
+
+Continue to the next project to explore bidirectional path symmetry:
+- **[Project 13: Dynamic Inbound Path Control via BGP Driven by SD-WAN SLA Status](../13-inbound-bgp-sla-control/)** – Utilizing `route-map-out-preferable` to dynamically manipulate BGP MED metrics based on SLA breaches, forcing upstream hubs to automatically reroute return traffic away from degraded branch circuits.
+
+---
+
+[⬅️ Back to Fortinet SD-WAN Masterclass Overview](../README.md)

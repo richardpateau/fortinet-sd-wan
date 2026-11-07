@@ -336,4 +336,13 @@ For deep-packet inspection in Wireshark, the raw capture files documenting the s
 
 ---
 
-[Back to Fortinet Module Overview](../README.md) · [Next Module: Cisco Catalyst SD-WAN (Viptela)](../../02-Cisco-Catalyst-SDWAN/)
+### What's Next?
+
+With intelligent local internet breakout fully validated, the next step is to eliminate manual, static IP destination objects from our SD-WAN policies entirely by leveraging control-plane metadata.
+
+Continue to the next project to explore automated, metadata-driven routing:
+- **[Project 11: Control-Plane BGP Community to SD-WAN Route-Tag Steering](../11-bgp-community-route-tag/)** – Translating BGP communities into kernel route-tags to dynamically steer traffic without hardcoding a single destination IP address, enabling true zero-touch provisioning at scale.
+
+---
+
+[⬅️ Back to Fortinet SD-WAN Overview](../README.md)

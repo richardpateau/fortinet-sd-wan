@@ -1,6 +1,6 @@
-# 🚦 Task 4: SD-WAN Traffic Shaping & QoS Enforcement
+# SD-WAN Traffic Shaping & QoS Enforcement
 
-## Executive Summary
+## Summary
 While SD-WAN path selection determines **which** link traffic traverses (MPLS vs. Broadband), Traffic Shaping dictates **how much** bandwidth that traffic is allowed to consume. Without Quality of Service (QoS), a single bulk data transfer (e.g., an unthrottled database backup, FTP transfer, or software update) can saturate WAN links, inducing packet queuing, severe jitter, and dropped frames for latency-sensitive applications like VoIP and cloud ERP systems.
 
 This module validates active **Quality of Service (QoS) Bandwidth Enforcement** integrated with the Fortinet SD-WAN architecture. A strict **2 Mbps (2000 Kbps)** rate-limiting shaper was deployed and enforced on outbound branch flows directed to bulk test targets (`192.168.1.15`). 
@@ -192,5 +192,13 @@ For independent analysis in Wireshark, the raw packet capture trace correspondin
 
 ---
 
-### Next Module
-* **[Task 5: IPsec Overlay Tunnel over SD-WAN Zone](../05-ipsec-overlay-sdwan/)** — Encrypting and securing multi-path branch communications over public underlays using route-based IPsec VPN overlays with automated SD-WAN health monitoring.
+### What's Next?
+
+With granular QoS enforcement protecting our critical applications from bandwidth starvation, the next step is to secure all inter-site traffic while maintaining this dynamic, policy-driven path selection.
+
+Continue to the next project to explore encrypted overlays:
+- **[Project 5: Dual Route-Based IPsec Overlay Tunnels over SD-WAN Zone](../05-ipsec-overlay-sdwan/)** – Binding IPsec tunnels directly to the SD-WAN zone to enable seamless, sub-second encrypted failover without tearing down Security Associations (SAs).
+
+---
+
+[⬅️ Back to Fortinet SD-WAN Overview](../README.md)

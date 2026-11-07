@@ -344,5 +344,13 @@ For independent packet-by-packet verification in Wireshark, the raw capture file
 
 ---
 
-### Next Architecture Module
-* **[Project 7: ADVPN with Dynamic SD-WAN Shortcuts (Hub-and-Spoke Topology)](../07-advpn-dynamic-shortcuts/)** — Establishing direct, on-demand, encrypted spoke-to-spoke IPsec shortcuts using BGP and Fortinet Auto-Discovery VPN (ADVPN).
+### What's Next?
+
+With advanced composite SLA monitoring protecting real-time applications from subtle network degradation, the next step is to eliminate the traditional Hub-and-Spoke bottleneck entirely.
+
+Continue to the next project to explore dynamic, self-healing overlays:
+- **[Project 7: ADVPN with Dynamic Spoke-to-Spoke Shortcuts](../07-advpn-dynamic-shortcuts/)** – Implementing Auto-Discovery VPN (ADVPN) with BGP Route Reflection to spawn on-demand, direct encrypted tunnels between branches, bypassing the Hub and cutting latency by 50%+.
+
+---
+
+[⬅️ Back to Fortinet SD-WAN Overview](../README.md) 

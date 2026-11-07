@@ -1,6 +1,6 @@
-# Policy 1: Priority-Based Performance Failover (Active / Standby)
+# Priority-Based Performance Failover (Active / Standby)
 
-## Executive Summary
+## Summary
 This module validates Fortinet FortiOS SD-WAN **intent-based, performance-driven link steering**. Rather than relying on layer-1/layer-2 physical link state (carrier detect), FortiGate monitors real-time path quality and next-hop reachability over the underlay WAN links.
 
 When the primary MPLS link (`ISP-A` / `port2`) experiences a routing blackhole or upstream failure (simulated via an ingress ACL blocking health probes on the ISP router), the FortiGate detects the failed health-check and automatically steers branch-bound traffic to the secondary Broadband link (`ISP-B` / `port3`) with zero manual intervention and sub-second convergence.

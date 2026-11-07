@@ -415,4 +415,13 @@ Route Distinguisher: 65000:21 (Default for VRF 20)
 
 ---
 
-[Back to Multi-Vendor SD-WAN Lab Overview](../../README.md) · [Next Module: Cisco Catalyst SD-WAN (Viptela)](../../02-Cisco-Catalyst-SDWAN/)
+### What's Next?
+
+With strict multi-tenant segmentation fully validated over a single overlay, the next step is to optimize outbound internet traffic by allowing trusted SaaS applications to break out locally at the branch, rather than backhauling everything to the HQ.
+
+Continue to the next project to explore intelligent internet breakout:
+- **[Project 10: Local Direct Internet Access (DIA) with ISDB Steering](../10-dia-saas-fqdn-steering/)** – Utilizing Fortinet's Internet Service Database (ISDB) and FQDN objects to dynamically steer trusted cloud traffic directly out the local broadband link while securely backhauling corporate traffic.
+
+---
+
+[⬅️ Back to Fortinet SD-WAN Overview](../README.md)

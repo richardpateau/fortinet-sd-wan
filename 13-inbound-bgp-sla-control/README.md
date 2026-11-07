@@ -328,4 +328,13 @@ Without any manual intervention or local configuration changes on Fortinet-HQ:
 
 ---
 
-[Back to Fortinet Module Overview](../README.md) · [Next Module: Cisco Catalyst SD-WAN (Viptela)](../../02-Cisco-Catalyst-SDWAN/)
+### ➡️ What's Next?
+
+With autonomous, bidirectional path symmetry fully validated, the next step is to eliminate the remaining 2-minute BGP hold-down delay during silent circuit brownouts by introducing sub-second failure detection.
+
+Continue to the next project to explore rapid protocol convergence:
+- **[Project 14: Sub-Second BGP Convergence via BFD over SD-WAN Overlays](../14-bfd-subsecond-convergence/)** – Implementing Bidirectional Forwarding Detection (BFD) with 250ms micro-timers to slash protocol failure detection from 137 seconds down to under 1 second, ensuring hitless failover.
+
+---
+
+[⬅️ Back to Fortinet SD-WAN Overview](../README.md)
