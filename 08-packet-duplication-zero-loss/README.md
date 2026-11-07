@@ -10,7 +10,7 @@ To achieve **zero-loss resilience**, FortiOS provides **Packet Duplication and D
 
 **Live Execution showing duplication vs no duplication**
 
-https://github.com/user-attachments/assets/c31203d5-b45f-4fdc-b301-3a1984fd6e9a
+https://github.com/user-attachments/assets/ab6552f0-1cd2-4928-abf7-f5b55ff10d5c
 
 ---
 
