@@ -779,9 +779,7 @@ traceroute to 10.30.30.10 (10.30.30.10), 30 hops max, 46 byte packets
 
 ---
 
----
-
-### ➡️ What's Next?
+### ➡What's Next?
 
 With dual-hub disaster recovery and autonomous control-plane failover fully validated, the next step is to solve the classic WAN asymmetry challenge by dynamically influencing *inbound* return traffic based on real-time branch link health.
 

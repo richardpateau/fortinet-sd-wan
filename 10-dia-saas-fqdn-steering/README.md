@@ -325,7 +325,6 @@ For deep-packet inspection in Wireshark, the raw capture files documenting the s
 | **Packet Captures** | [Drive: `firefox-test-dia-policy-port-2.pcapng`](https://drive.google.com/drive/folders/1IWMa5K0qDe2g_2mTt2T9U_M2Lbc2ZYO8?usp=sharing) | Full raw trace on port2 (7.3 MB) confirming 0 leaked DIA frames over the private circuit [1.2.4]. |
 | **Video Evidence** | `videos/sd-wan-dia-test-ping-and-wget.mp4` | Screen recording demonstrating CLI ping, wget, sniffer execution, and live traceroute verification. |
 | **Video Evidence** | `videos/sd-wan-dia-test-using-web-browser.mp4` | Screen recording of the client desktop loading public web applications via local DIA breakout. |
-| **Operational SOP** | `runbook ISDB` | Technical SOP detailing FQDN cache queries, kernel proute checks, and session clearing workflows. |
 
 ---
 
