@@ -13,7 +13,7 @@ The rule it deploys steers **SIP signalling (UDP 5060) toward the HQ LAN (`HQ-LA
 
 **Live Automation Video: Please enlarge for clearer video**
 
-https://github.com/user-attachments/assets/e06a3760-c2a5-4182-88fd-5161d990216a
+https://github.com/user-attachments/assets/a973ab1c-36b4-4df8-be04-f308dad36a9d
 
 ---
 
