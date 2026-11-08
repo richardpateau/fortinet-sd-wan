@@ -328,7 +328,7 @@ Without any manual intervention or local configuration changes on Fortinet-HQ:
 
 ---
 
-### ➡️ What's Next?
+### What's Next?
 
 With autonomous, bidirectional path symmetry fully validated, the next step is to eliminate the remaining 2-minute BGP hold-down delay during silent circuit brownouts by introducing sub-second failure detection.
 
